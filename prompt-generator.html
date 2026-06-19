@@ -76,7 +76,7 @@
             cursor: pointer;
             transition: all 0.25s;
         }
-        .btn:hover { background: #d03f00; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(232, 74, 0, 0.25); }
+        .btn:hover { background: #d03f00; transform: translateY(-2px); }
         .btn-secondary { background: #1e1e1e; border: 1px solid #2c2c2c; }
         .btn-secondary:hover { border-color: #E84A00; color: #fff; }
         .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
@@ -135,8 +135,11 @@
             font-size: 0.75rem;
             border: 1px solid #2a2a2a;
             margin: 0.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         .tag:hover { border-color: #E84A00; }
+        .tag.active { border-color: #E84A00; color: #E84A00; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         @media (max-width: 640px) { .card { padding: 1.5rem; } .form-row { grid-template-columns: 1fr; } }
     </style>
@@ -264,18 +267,18 @@
                 <!-- ===== SECTION 4: ELEMENTS ===== -->
                 <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">4. Design Elements</h3>
 
-                <label>Cultural Elements to include (select all that apply)</label>
+                <label>Cultural Elements to include (click to select)</label>
                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                    <span class="tag" onclick="toggleTag(this)">🇵🇰 Flag colors</span>
-                    <span class="tag" onclick="toggleTag(this)">🏛️ Traditional architecture</span>
-                    <span class="tag" onclick="toggleTag(this)">🌿 Local nature</span>
-                    <span class="tag" onclick="toggleTag(this)">🎵 Cultural patterns</span>
-                    <span class="tag" onclick="toggleTag(this)">📿 Local art</span>
-                    <span class="tag" onclick="toggleTag(this)">🍽️ Local cuisine</span>
-                    <span class="tag" onclick="toggleTag(this)">🏔️ Local landscapes</span>
-                    <span class="tag" onclick="toggleTag(this)">🕌 Religious/Cultural landmarks</span>
-                    <span class="tag" onclick="toggleTag(this)">🎭 Traditional clothing</span>
-                    <span class="tag" onclick="toggleTag(this)">📖 Calligraphy</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🇵🇰 Flag colors</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🏛️ Traditional architecture</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🌿 Local nature</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🎵 Cultural patterns</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">📿 Local art</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🍽️ Local cuisine</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🏔️ Local landscapes</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🕌 Cultural landmarks</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">🎭 Traditional clothing</span>
+                    <span class="tag" onclick="this.classList.toggle('active')">📖 Calligraphy</span>
                 </div>
 
                 <label for="extraElements">Other elements you want (comma separated)</label>
@@ -361,14 +364,6 @@
     </div>
 
     <script>
-        // Toggle tags
-        function toggleTag(el) {
-            el.classList.toggle('active');
-            el.style.borderColor = el.classList.contains('active') ? '#E84A00' : '#2a2a2a';
-            el.style.color = el.classList.contains('active') ? '#E84A00' : '#ccc';
-        }
-
-        // Image preview
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -382,7 +377,6 @@
             }
         }
 
-        // Generate prompt
         function generatePrompt() {
             const type = document.getElementById('type').value;
             const topic = document.getElementById('topic').value || 'your topic';
