@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Prompt Generator · Faceless Creator Kit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0d0d0d;
+            color: #e8e8e8;
+            font-family: 'Inter', -apple-system, sans-serif;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 820px; width: 100%; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .logo-icon { font-size: 2.5rem; display: block; }
+        h1 { font-size: 2.4rem; font-weight: 800; color: #ffffff; }
+        h1 .accent { color: #E84A00; }
+        .subtitle { color: #888; font-style: italic; font-size: 1rem; }
+        .nav { display: flex; justify-content: center; gap: 1.5rem; margin: 1.5rem 0 2rem; flex-wrap: wrap; }
+        .nav a { color: #888; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .nav a:hover { color: #E84A00; }
+        .nav a.active { color: #E84A00; font-weight: 600; }
+        .card {
+            background: #141414;
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            border: 1px solid #222;
+            margin-bottom: 1.5rem;
+        }
+        .card h2 { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+        .card h2 .accent { color: #E84A00; }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #ccc;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .label-desc {
+            display: block;
+            color: #666;
+            font-size: 0.8rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #E84A00;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .btn {
+            background: #E84A00;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn:hover { background: #d03f00; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(232, 74, 0, 0.25); }
+        .btn-secondary { background: #1e1e1e; border: 1px solid #2c2c2c; }
+        .btn-secondary:hover { border-color: #E84A00; color: #fff; }
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .generated-prompt {
+            background: #0d0d0d;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #E84A00;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            color: #ccc;
+            font-family: 'Inter', monospace;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .copy-btn {
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #2c2c2c;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
+        .copy-btn:hover { border-color: #E84A00; color: #fff; }
+        .footer { margin-top: 2rem; text-align: center; font-size: 0.85rem; color: #555; border-top: 1px solid #1c1c1c; padding-top: 2rem; }
+        .footer a { color: #888; text-decoration: none; }
+        .footer a:hover { color: #E84A00; }
+        .footer .brand { color: #E84A00; font-weight: 600; }
+        .image-upload {
+            border: 2px dashed #2a2a2a;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .image-upload:hover { border-color: #E84A00; }
+        .image-upload input { display: none; }
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        .tag {
+            display: inline-block;
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid #2a2a2a;
+            margin: 0.2rem;
+        }
+        .tag:hover { border-color: #E84A00; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 640px) { .card { padding: 1.5rem; } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <span class="logo-icon">🤖</span>
+            <h1>AI Prompt <span class="accent">Generator</span></h1>
+            <p class="subtitle">Tell us your culture, style, and vision → Get a prompt → AI creates your design</p>
+        </header>
+
+        <nav class="nav">
+            <a href="https://laiqqureshi.github.io/FacelessCreatorKit/">Home</a>
+            <a href="how-it-works.html">How It Works</a>
+            <a href="#" class="active">Prompt Generator</a>
+            <a href="https://github.com/LaiqQureshi/FacelessCreatorKit">GitHub</a>
+        </nav>
+
+        <div class="card">
+            <h2>📝 Your Design Brief</h2>
+            <form id="promptForm">
+
+                <!-- ===== SECTION 1: BASIC INFO ===== -->
+                <h3 style="color: #E84A00; margin: 1rem 0 0.5rem;">1. Basic Info</h3>
+
+                <label for="type">What type of design?</label>
+                <select id="type">
+                    <option value="thumbnail">YouTube Thumbnail</option>
+                    <option value="banner">Channel Banner</option>
+                    <option value="intro">Video Intro</option>
+                    <option value="outro">Video Outro</option>
+                    <option value="end-screen">End Screen</option>
+                    <option value="story">Instagram Story</option>
+                    <option value="poster">Poster / Thumbnail</option>
+                </select>
+
+                <label for="topic">What's your topic?</label>
+                <input type="text" id="topic" placeholder="e.g., AI News, Crypto, Motivation, Cooking" value="AI News" />
+
+                <div class="form-row">
+                    <div>
+                        <label for="channel">Channel/Page Name</label>
+                        <input type="text" id="channel" placeholder="e.g., TechVerse" value="Faceless Creator" />
+                    </div>
+                    <div>
+                        <label for="tagline">Tagline (optional)</label>
+                        <input type="text" id="tagline" placeholder="e.g., I direct machines to imagine." value="I direct machines to imagine." />
+                    </div>
+                </div>
+
+                <!-- ===== SECTION 2: CULTURE & REGION ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">2. Culture & Region</h3>
+
+                <label for="country">Your Country / Region</label>
+                <select id="country">
+                    <option value="">Select your country...</option>
+                    <option value="Pakistan" selected>🇵🇰 Pakistan</option>
+                    <option value="India">🇮🇳 India</option>
+                    <option value="USA">🇺🇸 USA</option>
+                    <option value="UK">🇬🇧 UK</option>
+                    <option value="Canada">🇨🇦 Canada</option>
+                    <option value="Australia">🇦🇺 Australia</option>
+                    <option value="Germany">🇩🇪 Germany</option>
+                    <option value="France">🇫🇷 France</option>
+                    <option value="Japan">🇯🇵 Japan</option>
+                    <option value="China">🇨🇳 China</option>
+                    <option value="Brazil">🇧🇷 Brazil</option>
+                    <option value="Nigeria">🇳🇬 Nigeria</option>
+                    <option value="Egypt">🇪🇬 Egypt</option>
+                    <option value="Turkey">🇹🇷 Turkey</option>
+                    <option value="UAE">🇦🇪 UAE</option>
+                    <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="culture">Describe your culture / vibe (optional)</label>
+                <input type="text" id="culture" placeholder="e.g., Modern, Traditional, Minimalist, Bold, Colorful" value="Modern with traditional elements" />
+
+                <label for="language">Design Language / Text</label>
+                <select id="language">
+                    <option value="English">English</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                    <option value="German">German</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Turkish">Turkish</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <!-- ===== SECTION 3: VISUAL STYLE ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">3. Visual Style & Colors</h3>
+
+                <label for="color">Primary Color</label>
+                <select id="color">
+                    <option value="#E84A00">🧡 #E84A00 Orange (Signature)</option>
+                    <option value="#FF5733">❤️ Red-Orange</option>
+                    <option value="#00BFFF">💙 Deep Blue</option>
+                    <option value="#00FF88">💚 Neon Green</option>
+                    <option value="#FFD700">💛 Gold</option>
+                    <option value="#FF69B4">💗 Pink</option>
+                    <option value="#8B00FF">💜 Purple</option>
+                    <option value="#000000">🖤 Black</option>
+                    <option value="#FFFFFF">🤍 White</option>
+                </select>
+
+                <label for="look">Look & Feel (mood / vibe)</label>
+                <select id="look">
+                    <option value="Premium & Luxurious">Premium & Luxurious</option>
+                    <option value="Minimal & Clean">Minimal & Clean</option>
+                    <option value="Bold & Energetic">Bold & Energetic</option>
+                    <option value="Warm & Friendly">Warm & Friendly</option>
+                    <option value="Dark & Mysterious">Dark & Mysterious</option>
+                    <option value="Vibrant & Colorful">Vibrant & Colorful</option>
+                    <option value="Professional & Corporate">Professional & Corporate</option>
+                    <option value="Casual & Playful">Casual & Playful</option>
+                    <option value="Futuristic & Tech">Futuristic & Tech</option>
+                    <option value="Traditional & Cultural">Traditional & Cultural</option>
+                </select>
+
+                <!-- ===== SECTION 4: ELEMENTS ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">4. Design Elements</h3>
+
+                <label>Cultural Elements to include (select all that apply)</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                    <span class="tag" onclick="toggleTag(this)">🇵🇰 Flag colors</span>
+                    <span class="tag" onclick="toggleTag(this)">🏛️ Traditional architecture</span>
+                    <span class="tag" onclick="toggleTag(this)">🌿 Local nature</span>
+                    <span class="tag" onclick="toggleTag(this)">🎵 Cultural patterns</span>
+                    <span class="tag" onclick="toggleTag(this)">📿 Local art</span>
+                    <span class="tag" onclick="toggleTag(this)">🍽️ Local cuisine</span>
+                    <span class="tag" onclick="toggleTag(this)">🏔️ Local landscapes</span>
+                    <span class="tag" onclick="toggleTag(this)">🕌 Religious/Cultural landmarks</span>
+                    <span class="tag" onclick="toggleTag(this)">🎭 Traditional clothing</span>
+                    <span class="tag" onclick="toggleTag(this)">📖 Calligraphy</span>
+                </div>
+
+                <label for="extraElements">Other elements you want (comma separated)</label>
+                <input type="text" id="extraElements" placeholder="e.g., AI icons, glowing effects, geometric shapes" value="AI icons, glowing effects" />
+
+                <!-- ===== SECTION 5: REFERENCE IMAGE ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">5. Reference Image (Optional)</h3>
+                <p style="color: #666; font-size: 0.85rem; margin-bottom: 0.5rem;">Upload an image that shows the look & feel you want.</p>
+                <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                    <span style="font-size: 2rem;">🖼️</span>
+                    <p style="color: #888;">Click to upload a reference image</p>
+                    <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)" />
+                    <img id="imagePreview" class="image-preview" style="display: none;" />
+                </div>
+
+                <!-- ===== SECTION 6: LANGUAGE ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">6. Text & Language Details</h3>
+
+                <label for="customText">What text should appear on the design?</label>
+                <input type="text" id="customText" placeholder="e.g., AI News Daily | Subscribe | Watch Now" value="AI News Daily" />
+
+                <label for="textLanguage">Text Language</label>
+                <select id="textLanguage">
+                    <option value="English">English</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                    <option value="German">German</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Turkish">Turkish</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <!-- ===== SECTION 7: EXTRA DETAILS ===== -->
+                <h3 style="color: #E84A00; margin: 1.5rem 0 0.5rem;">7. Anything Else?</h3>
+
+                <label for="details">Additional instructions (optional)</label>
+                <textarea id="details" placeholder="e.g., No human faces, use a dark background, include a subscribe button..."></textarea>
+
+                <button type="button" class="btn" onclick="generatePrompt()">🚀 Generate Prompt</button>
+            </form>
+
+            <!-- Output -->
+            <div id="output" style="display: none;">
+                <h3 style="color: #E84A00; margin-top: 1.5rem;">✨ Your AI Prompt</h3>
+                <p style="color: #888; font-size: 0.85rem;">Copy this prompt and paste into Canva AI, Gemini, or ChatGPT:</p>
+                <div class="generated-prompt" id="promptOutput"></div>
+                <button class="copy-btn" onclick="copyPrompt()">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+
+        <div class="card" style="border-color: #2a2a2a;">
+            <h2>🔧 How to Use</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div style="background: #1a1a1a; padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem;">1️⃣</div>
+                    <strong style="color: #fff;">Copy Prompt</strong>
+                    <p style="font-size: 0.8rem; color: #888;">Click the copy button</p>
+                </div>
+                <div style="background: #1a1a1a; padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem;">2️⃣</div>
+                    <strong style="color: #fff;">Paste into AI</strong>
+                    <p style="font-size: 0.8rem; color: #888;">Canva AI, Gemini, or ChatGPT</p>
+                </div>
+                <div style="background: #1a1a1a; padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.5rem;">3️⃣</div>
+                    <strong style="color: #fff;">Generate &amp; Download</strong>
+                    <p style="font-size: 0.8rem; color: #888;">Let AI do the work</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Created with <span style="color:#E84A00;">✦</span> by <a href="https://laiqverse11.wordpress.com" class="brand">Laiq Ahmed Qureshi</a></p>
+            <p style="font-size: 0.75rem; color: #444; margin-top: 0.5rem;">
+                <a href="https://laiqqureshi.github.io/LaiqVerse-Prompt-Library/">Prompt Library</a> &middot;
+                <a href="https://laiqqureshi.github.io/LaiqVerse-Repo-Explorer/">Repo Explorer</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle tags
+        function toggleTag(el) {
+            el.classList.toggle('active');
+            el.style.borderColor = el.classList.contains('active') ? '#E84A00' : '#2a2a2a';
+            el.style.color = el.classList.contains('active') ? '#E84A00' : '#ccc';
+        }
+
+        // Image preview
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Generate prompt
+        function generatePrompt() {
+            const type = document.getElementById('type').value;
+            const topic = document.getElementById('topic').value || 'your topic';
+            const channel = document.getElementById('channel').value || 'your channel';
+            const tagline = document.getElementById('tagline').value || '';
+            const country = document.getElementById('country').value || '';
+            const culture = document.getElementById('culture').value || '';
+            const language = document.getElementById('language').value || 'English';
+            const color = document.getElementById('color').value;
+            const look = document.getElementById('look').value;
+            const extraElements = document.getElementById('extraElements').value || '';
+            const customText = document.getElementById('customText').value || '';
+            const textLanguage = document.getElementById('textLanguage').value || 'English';
+            const details = document.getElementById('details').value || '';
+
+            // Get selected tags
+            const tags = document.querySelectorAll('.tag.active');
+            let tagList = [];
+            tags.forEach(t => tagList.push(t.textContent.trim()));
+            const culturalElements = tagList.join(', ') || 'None specified';
+
+            const typeNames = {
+                'thumbnail': 'YouTube Thumbnail (1920x1080)',
+                'banner': 'Channel Banner (2560x1440)',
+                'intro': 'Video Intro (5-10 seconds)',
+                'outro': 'Video Outro (5-10 seconds)',
+                'end-screen': 'End Screen (1920x1080)',
+                'story': 'Instagram Story (1080x1920)',
+                'poster': 'Poster / Thumbnail (1920x1080)'
+            };
+
+            let prompt = `🎨 **Design Brief: ${typeNames[type] || type}**\n\n`;
+            prompt += `📌 **Topic:** ${topic}\n`;
+            prompt += `📌 **Channel:** ${channel}\n`;
+            if (tagline) prompt += `📌 **Tagline:** "${tagline}"\n`;
+            prompt += `📌 **Country/Region:** ${country || 'Not specified'}\n`;
+            prompt += `📌 **Culture/Vibe:** ${culture || 'Not specified'}\n`;
+            prompt += `📌 **Design Language:** ${textLanguage || language}\n\n`;
+
+            prompt += `🎨 **Colors:** Primary: ${color} | Dark background: #1A1A1A\n`;
+            prompt += `🎨 **Look & Feel:** ${look}\n\n`;
+
+            prompt += `🖼️ **Cultural Elements:** ${culturalElements}\n`;
+            if (extraElements) prompt += `🖼️ **Additional Elements:** ${extraElements}\n\n`;
+
+            if (customText) prompt += `📝 **Text on Design:** "${customText}" (in ${textLanguage || 'English'})\n\n`;
+
+            prompt += `📐 **Style Instructions:**\n`;
+            prompt += `- Create a premium, professional design\n`;
+            prompt += `- Use the specified colors consistently\n`;
+            prompt += `- Make it culturally relevant to ${country || 'the specified region'}\n`;
+            prompt += `- No human faces required (faceless creator style)\n`;
+            prompt += `- High contrast, attention-grabbing\n`;
+            prompt += `- Clean typography, easy to read\n\n`;
+
+            if (details) prompt += `📝 **Additional Instructions:** ${details}\n\n`;
+
+            prompt += `🔧 **For AI Tools:**\n`;
+            prompt += `- Canva AI: Use "Magic Studio" to generate\n`;
+            prompt += `- Gemini/ChatGPT: Use this prompt to generate a design concept\n`;
+            prompt += `- Midjourney: Convert this to an image generation prompt\n\n`;
+
+            prompt += `---\n`;
+            prompt += `✨ *"I direct machines to imagine." — Laiq Ahmed Qureshi*`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => { btn.textContent = '📋 Copy to Clipboard'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
